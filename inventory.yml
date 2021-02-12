@@ -1,0 +1,33 @@
+---
+- CORE_01:
+    ip: 10.0.0.31/24
+    name: Core-01-01
+    group: Core
+- CORE_02:
+    ip: 10.0.0.32/24
+    name: Core-01-02
+    group: Core
+- DIST_01:
+    ip: 10.0.0.33/24
+    name: Dist-01-01
+    group: Distribution
+- DIST_02:
+    ip: 10.0.0.34/24
+    name: Dist-01-02
+    group: Distribution
+- ACCS_01
+    ip: 10.0.0.35/24
+    name: Accs-01-01
+    group: Access
+- ACCS_02
+    ip: 10.0.0.36/24
+    name: Accs-01-01
+    group: Access
+- ACCS_03
+    ip: 10.0.0.37/24
+    name: Accs-01-01
+    group: Access
+- ACCS_04
+    ip: 10.0.0.38/24
+    name: Accs-01-01
+    group: Access
