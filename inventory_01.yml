@@ -1,39 +1,43 @@
 all:
   vars:
-    username: cisco
-    password: cisco
+    username: admin
+    password: admin
   sites:
-    - name: eve-ng
+      name: eve-ng
       hosts:
-        - CORE_01:
-            ip: 10.0.0.101/24
-            name: core-01-01
+        CORE1:
+            ip: 192.168.0.251
+            name: CORE1
             group: core
-        - core_02:
-            ip: 10.0.0.102/24
-            name: core-01-02
+        CORE2:
+            ip: 192.168.0.252
+            name: CORE2
             group: core
-        - DIST_01:
-            ip: 10.0.0.103/24
-            name: dist-01-01
+        DS1:
+            ip: 192.168.0.241
+            name: DS1
             group: distribution
-        - DIST_02:
-            ip: 10.0.0.104/24
-            name: dist-01-02
+        DS2:
+            ip: 192.168.0.242
+            name: DS2
             group: distribution
-        - ACCS_01:
-            ip: 10.0.0.105/24
-            name: accs-01-01
+        DS3:
+            ip: 192.168.0.243
+            name: DS3
+            group: distribution
+        AC1:
+            ip: 192.168.0.231
+            name: AC1
             group: access
-        - ACCS_02:
-            ip: 10.0.0.106/24
-            name: accs-01-01
+        AC2:
+            ip: 192.168.0.232
+            name: AC2
             group: access
-        - ACCS_03:
-            ip: 10.0.0.107/24
-            name: accs-01-01
+        AC3:
+            ip: 192.168.0.233
+            name: AC3
             group: access
-        - ACCS_04:
-            ip: 10.0.0.108/24
-            name: accs-01-01
-            group: access
+        AC4:
+            ip: 192.168.0.234
+            name: AC4
+            group: access            

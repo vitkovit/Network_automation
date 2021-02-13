@@ -1,27 +1,15 @@
 from netmiko import ConnectHandler
 from datetime import datetime
-from copy import deepcopy
 import yaml
+from pprint import pprint
+
 
 SH_COMMANDS = ["show running-config"]
 
-def read_yaml(path="inventory_01.yml"):
-    with open(path) as f:
-        yaml_content = yaml.safe_load(f.read())
-    return yaml_content
+with open('/root/Network_automation/inventory_01.yml') as f:
+    yaml_content = yaml.safe_load(f)
 
-def get_connection_parameters(parsed_yaml):
-    parsed_yaml = deepcopy(parsed_yaml)
-    login_credentials = parsed_yaml["all"]["vars"]
-    for site_dict in parsed_yaml["all"]["sites"]:
-        for host in site_dict["hosts"]:
-            host_dict = {}
-            host_dict.update(login_credentials)
-            host_dict.update(host)
-            yield host_dict
-
-def show_commands(devices, commands):
-    for device in devices:
+def show_commands(device, commands):
         start_time = datetime.now()
         hostname = device.pop("name")
         connection = ConnectHandler(**device)
@@ -35,16 +23,18 @@ def show_commands(devices, commands):
         device_result_string = "\n\n".join(device_result)
         connection.disconnect()
         device_result_string += "\nElapsed time: " + str(datetime.now() - start_time)
-        yield device_result_string
-
-def main():
-    parsed_yaml = read_yaml()
-    print(parsed_yaml)
-    connection_parameters = get_connection_parameters(parsed_yaml, site_name=SITE_NAME)
-
-    for device_result in show_commands(connection_parameters, SH_COMMANDS):
-        print(device_result)
+        return device_result_string
 
 
-if __name__ == "__main__":
-    main()
+for device in yaml_content['all']['sites']['hosts']:
+    pprint(device)
+    connection_data = {
+        'device_type': 'cisco_ios',
+        'host': yaml_content['all']['sites']['hosts'][device]['ip'],
+        'username': yaml_content['all']['vars']['username'],
+        'password': yaml_content['all']['vars']['password'],
+        'name': yaml_content['all']['sites']['hosts'][device]['name']
+    }
+    results = show_commands(connection_data, SH_COMMANDS)
+    pprint(results)
+
