@@ -1,10 +1,11 @@
+! ###################### router ######################
 enable
 config t
 no service config
 no boot network
 
 ! change #########
-hostname #########
+hostname ####-01-##
 ! change #########
 no ip domain-lookup
 username cisco priv 15 pass cisco
@@ -12,7 +13,6 @@ ip domain-name eve-ng.com
 ip ssh ver 2
 crypto key generate rsa mod 1024
 
-yes
 line vty 0
 transport input ssh
 login local
@@ -38,6 +38,43 @@ end
 wr
 
 
+! ###################### switch ######################
 
+enable
+config t
+no service config
+no boot network
 
+! change #########
+hostname accs-01-##
+! change #########
+no ip domain-lookup
+username cisco priv 15 pass cisco
+ip domain-name eve-ng.com
+ip ssh ver 2
+crypto key generate rsa mod 1024
+
+line vty 0
+transport input ssh
+login local
+exit
+
+! OOB - VRF
+vrf definition OOB-MGMT
+address-family ipv4
+exit
+exit
+int ethernet 3/3
+no switchport
+vrf forwarding OOB-MGMT
+
+! change #########
+ip address 10.0.0.### 255.255.255.0
+! change #########
+
+no shut
+exit
+ip route vrf OOB-MGMT 0.0.0.0 0.0.0.0 10.0.0.1
+end
+wr
 
