@@ -5,7 +5,7 @@ no service config
 no boot network
 
 ! change #########
-hostname ####-01-##
+hostname core-01-01
 ! change #########
 no ip domain-lookup
 username cisco priv 15 pass cisco
@@ -28,7 +28,7 @@ int ethernet 3/3
 vrf forwarding OOB-MGMT
 
 ! change #########
-ip address 10.0.0.### 255.255.255.0
+ip address 10.0.0.101 255.255.255.0
 ! change #########
 
 no shut
