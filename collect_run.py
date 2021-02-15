@@ -1,4 +1,4 @@
-from netmiko import ConnectHandler
+"""from netmiko import ConnectHandler
 from datetime import datetime
 from copy import deepcopy
 import yaml
@@ -48,3 +48,74 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+"""
+
+
+from netmiko import ConnectHandler
+import yaml
+#with open("inventory_01.yml") as f:
+#    my_inventory=yaml.safe_load(f)
+#def output_ip():
+my_inventory = open('inventory_01.yml').read()              # read yaml file .r is not working
+my_inventory_yaml = yaml.safe_load(my_inventory)            # readed output saved as variable
+#print(type(my_inventory_yaml))                              # variable is a DICT
+#print(type(my_inventory_yaml["all"]))                       # this is DICT
+#print(my_inventory_yaml["all"])                              # this will print whole dictionary "all"
+#print(type(my_inventory_yaml["all"]["sites"]))              # this is a LIST in the DICT
+#print(my_inventory_yaml["all"]["sites"])                    # this will print list for "sites"
+list_all_ip = []                                             # create empty list where IP will be stored
+list_all_host = []
+#list_all_ip = {}                                               # create empty DICT
+for site_dict in my_inventory_yaml["all"]["sites"]:            # this will check dictionary under key "all" and list "sites"
+    #print(type(site_dict["hosts"]))    # this is LIST
+    #print(type(site_dict))             # this is DICT
+    #print(site_dict["hosts"])    # this will print out list under "hosts"
+    #print(site_dict)             # this will print out dictionary under "sites"
+    for host in site_dict["hosts"]:
+    #print(type(host))               # this is DICT
+    #print(host)                      # this will print out nested dictionary for every "host"
+        for device, device_data in host.items():
+            #print(type(device))        # this is STR
+            #print(device)              # this print out key values in dictionary
+            #print(type(device_data))   # this is nested DICT
+            #print(device_data)         # this will print out dictionary for every device
+            #print(device_data["ip"])   # this will print out device data for key value "ip", this can be any other key value
+            #print(type(device_data["ip"]))                 # this will be STR
+            #print(device_data["ip"].split('/')[0])          # this will split str by '/' and print out position0
+            ip_list = device_data["ip"].split('/')[0]       # creating valiable to loak cleaner
+            list_all_ip.append(ip_list)                   # add every ip from the loop in the list_all_ip list
+            list_all_host.append(device)
+            #list_all_ip.update(ip_list)
+            #print(ip_list)
+
+
+print(list_all_ip)                                        # this exit the loops and check what is in the new list
+print(list_all_host)
+#return(list_all_ip)                                        # return can be used if you use function
+for x in list_all_host:
+    for y in list_all_ip:
+        
+
+#for x in list_all_ip:
+#    print(x)
+login_credentials = my_inventory_yaml["all"]["vars"]
+#print(type(login_credentials))
+#for x,y in login_credentials.items():
+    #print(type(y))
+    #print(y)
+
+           
+"""                    
+    #for address in ip:
+    #    print(address + ":" + ip["ip"])
+    #for host in site_dict["all"]:
+    #for host in site_dict["hosts"]:
+        #host_dict = {}
+        #print(type(host))
+        #   for x in site_dict["hosts"]:
+        #        print(x)
+                #for y in x:
+                    #print(y(0)["ip"])
+        #print(host["CORE_01"])
+"""
