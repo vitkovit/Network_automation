@@ -3,7 +3,7 @@
     ip: 10.0.0.31/24
     name: core-01-01
     group: core
-- core_02:
+- CORE_02:
     ip: 10.0.0.32/24
     name: core-01-02
     group: core

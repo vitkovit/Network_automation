@@ -1,3 +1,4 @@
+---
 all:
   vars:
     username: cisco
@@ -9,7 +10,7 @@ all:
             ip: 10.0.0.101/24
             name: core-01-01
             group: core
-        - core_02:
+        - CORE_02:
             ip: 10.0.0.102/24
             name: core-01-02
             group: core
