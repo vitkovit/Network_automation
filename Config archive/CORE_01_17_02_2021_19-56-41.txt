@@ -2,16 +2,14 @@
 Building configuration...
 
   
-Current configuration : 2053 bytes
-!
-! Last configuration change at 09:08:01 EET Sat Feb 13 2021
+Current configuration : 1991 bytes
 !
 version 15.7
 service timestamps debug datetime msec
 service timestamps log datetime msec
 no service password-encryption
 !
-hostname dist-01-01
+hostname core-01-01
 !
 boot-start-marker
 boot-end-marker
@@ -163,7 +161,7 @@ interface Ethernet3/2
 !
 interface Ethernet3/3
  vrf forwarding OOB-MGMT
- ip address 10.0.0.103 255.255.255.0
+ ip address 10.0.0.101 255.255.255.0
  duplex auto
 !
 ip forward-protocol nd
