@@ -1,15 +1,16 @@
-
 Building configuration...
 
   
-Current configuration : 1991 bytes
+Current configuration : 2120 bytes
+!
+! Last configuration change at 04:05:07 EET Thu Feb 18 2021 by cisco
 !
 version 15.7
 service timestamps debug datetime msec
 service timestamps log datetime msec
 no service password-encryption
 !
-hostname dist-01-01
+hostname dist-01-02
 !
 boot-start-marker
 boot-end-marker
@@ -83,6 +84,9 @@ redundancy
 !
 !
 !
+!
+interface Loopback0
+ ip address 1.1.1.4 255.255.255.255
 !
 interface Ethernet0/0
  no ip address
@@ -161,7 +165,7 @@ interface Ethernet3/2
 !
 interface Ethernet3/3
  vrf forwarding OOB-MGMT
- ip address 10.0.0.103 255.255.255.0
+ ip address 10.0.0.104 255.255.255.0
  duplex auto
 !
 ip forward-protocol nd

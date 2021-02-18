@@ -46,7 +46,7 @@ no service config
 no boot network
 
 ! change #########
-hostname accs-01-##
+hostname accs-01-02
 ! change #########
 no ip domain-lookup
 username cisco priv 15 pass cisco
@@ -69,7 +69,7 @@ no switchport
 vrf forwarding OOB-MGMT
 
 ! change #########
-ip address 10.0.0.### 255.255.255.0
+ip address 10.0.0.106 255.255.255.0
 ! change #########
 
 no shut

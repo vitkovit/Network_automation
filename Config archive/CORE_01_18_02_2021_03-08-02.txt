@@ -1,8 +1,9 @@
-
 Building configuration...
 
   
-Current configuration : 1991 bytes
+Current configuration : 2120 bytes
+!
+! Last configuration change at 04:04:58 EET Thu Feb 18 2021 by cisco
 !
 version 15.7
 service timestamps debug datetime msec
@@ -83,6 +84,9 @@ redundancy
 !
 !
 !
+!
+interface Loopback0
+ ip address 1.1.1.1 255.255.255.255
 !
 interface Ethernet0/0
  no ip address

@@ -55,6 +55,7 @@ if __name__ == "__main__":
 from netmiko import ConnectHandler
 import yaml
 import datetime
+from pprint import pprint
   
 
 filename = datetime.datetime.now()
@@ -76,14 +77,15 @@ my_inventory_yaml = yaml.safe_load(my_inventory)            # readed output save
 #list_all_ip = {}                                               # create empty DICT
 #host_dict = {}
 for site_dict in my_inventory_yaml["all"]["sites"]:            # this will check dictionary under key "all" and list "sites"
+    #print(my_inventory_yaml["all"]["sites"]["hosts"])
     #print(type(site_dict["hosts"]))    # this is LIST
     #print(type(site_dict))             # this is DICT
     #print(site_dict["hosts"])    # this will print out list under "hosts"
     #print(site_dict)             # this will print out dictionary under "sites"
-#    for host in site_dict["hosts"]:
+    for host in site_dict["hosts"]:
     #print(type(host))               # this is DICT
         #print(host)                      # this will print out nested dictionary for every "host"
-#        for device, device_data in host.items():
+        for device, device_data in host.items():
             #print(type(device))        # this is STR
             #print(device)              # this print out key values in dictionary
             #print(type(device_data))   # this is nested DICT
@@ -104,29 +106,64 @@ for site_dict in my_inventory_yaml["all"]["sites"]:            # this will check
         #print(type(host))
         host_dict = {}
         host_dict.update({'device_type': 'cisco_ios'})
-        #host_dict.update(host)
+        host_dict.update(host)
         host_dict.update(login_credentials)
         #print(host_dict)
         #print(host_dict['username'])
+        name=str(host)
+        #print(name)
         #print(host)
+        
+        #for w in host["interfaces"]:
+            #print(w)
         for key, value in host.items():
-            #print(type(value))
-            #print(key)
+            #print(type(value["interfaces"]["lo0"]))
+            ip_list = value['ip'].split('/')[0]
+            y=dict.fromkeys({'ip'})
+            y['ip']=ip_list
+            host_dict.update(y)
+            print(host_dict)
+            #for value2 in value["interfaces"]:
+            #    print(value)
+                for key in host:
+                q=[]
+                q.append(key)
+                name=key
+                print(name)
+
+        #        device = ConnectHandler(**value)
+        #        output = device.send_command("show running-config")
+        #        save_file = open("{}_{}.txt".format(name,TIME),"w")
+        #        save_file.write(output)
+        #       ave_file.close()
+        #        device.disconnect()
+        #        print(device)
+
+            #for key2, value2 in key.items():
+            #    print(value2)
             #print(type(key))
             #ip_list= []
+            #print(type(value))
+            #for w in value:
+            #    print(w)
+            #print(host)
+            #for
+            #for
+            #y=[]
+            #y.append(value)
             #ip_list.append(value['ip'].split('/')[0])
-            ip_list = value['ip'].split('/')[0]
+            #ip_list = value['ip'].split('/')[0]
             #print(host_dict)                        # this will print dictionary device type, username, password
             #x=ip_list
             #return ip_list
             #print(type(x))                                 # this will print list on IP addresses
             #print(ip_list)
-            y=dict.fromkeys({'ip'})
-            y['ip']=ip_list
+            #y=dict.fromkeys({'ip'})
+            #y['ip']=ip_list
             
             #print(y)
             #    print(q)
-            host_dict.update(y)
+        #    host_dict.update(y)
             #site_dict.update(host_dict)
             #print(host_dict)                           # final format - need to be assigned to new key
             #print(type(host_dict))
@@ -136,24 +173,26 @@ for site_dict in my_inventory_yaml["all"]["sites"]:            # this will check
             #for key in host.keys():
             #    key=dict(key + host_dict)
             #    print(key)
-            for key in host:
-                q=[]
-                q.append(key)
+        #    for key in host:
+        #        q=[]
+        #        q.append(key)
                 #print(type(q))
-                name=key
-                #print(q)
+        #        name=key
+        #        print(q)
                 #print(name)
-                x=dict.fromkeys(q,host_dict)
+        #        x=dict.fromkeys(q,host_dict)
+        #        print((x)
                 #print(type(x))
                 #print(len(x))
                 
 
-                device = ConnectHandler(**host_dict)
-                output = device.send_command("show running-config")
-                save_file = open("{}_{}.txt".format(name,TIME),"w")
-                save_file.write(output)
-                save_file.close()
-                device.disconnect()
+        #        device = ConnectHandler(**value)
+        #        output = device.send_command("show running-config")
+        #        save_file = open("{}_{}.txt".format(name,TIME),"w")
+        #        save_file.write(output)
+        #       ave_file.close()
+        #        device.disconnect()
+        #        print(device)
             
 
             #print(ip_list)
@@ -196,4 +235,4 @@ for site_dict in my_inventory_yaml["all"]["sites"]:            # this will check
 #print(type(login_credentials))
 #for x,y in login_credentials.items():
     #print(type(y))
-    #print(y)"""
+    #print(y)
