@@ -28,3 +28,5 @@ for site_dict in my_inventory_yaml["all"]["sites"]:            # this will check
             output = device.send_config_set(interface_config)   # sendig predefined list of configuration
             device.disconnect()                                 # close connection
             print("loopback lo0 created with IP: {} on device: {}".format(int_lo_address,device_name))
+
+
