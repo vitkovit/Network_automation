@@ -42,13 +42,12 @@ def device_data(open_file,stored_credentials,defined_time):
         device_in_site = {}
         device_in_site.update({'device_type':(open_file['all']['sites']['device_type_cisco'])})
         ip_address = ipaddress.IPv4Interface(open_file['all']['sites']['hosts'][device]['ip'])
-        device_in_site.update({'host':str(ip_address.ip)})                                      # convert to str because it is <class 'ipaddress.IPv4Address'>
-        #device_in_site.update(open_file['all']['credentilas'])                                 # update from yaml file
+        device_in_site.update({'host':str(ip_address.ip)})                                      # convert to str because it is <class 
         device_in_site.update(stored_credentials)                                               # update dictionary with credentials from another function
 
         con_device = ConnectHandler(**device_in_site)
         output = con_device.send_command(COMMANDS[0])
-        with open(f"{FOLDER}/{device}_{defined_time}.txt", "w") as file_to_save:                        # format, anc "w"(create file if does not exist)
+        with open(f"{FOLDER}/{device}_{defined_time}.txt", "w") as file_to_save:                # format, anc "w"(create file if does not exist)
             file_to_save.close()
         con_device.disconnect()
 
