@@ -32,10 +32,12 @@ for site_dict in my_inventory_yaml["all"]["sites"]:            # this will check
             for devices in host:
                 device_name = devices
 
-
+"""
                 device = ConnectHandler(**host_dict)
                 output = device.send_command(commands[0])
                 save_file = open("{}/{}_{}.txt".format(folder,device_name,TIME),"w")
                 save_file.write(output)
                 save_file.close()
                 device.disconnect()
+"""
+    print(devices)

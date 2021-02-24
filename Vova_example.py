@@ -25,7 +25,6 @@ def show_commands(device, commands):
         device_result_string += "\nElapsed time: " + str(datetime.now() - start_time)
         return device_result_string
 
-
 for device in yaml_content['all']['sites']['hosts']:
     pprint(device)
     connection_data = {
