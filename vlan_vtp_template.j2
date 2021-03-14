@@ -1,0 +1,15 @@
+! config mode
+interface {{ interface }}
+    description {{  }} {{  }} {{  }}
+    switchport
+    {% if vlan == "trunk" -%}
+    switchport mode trunk
+    {% else -%}
+    switchport mode access
+    switchport access vlan {{ vlan }}
+    spanning-tree port type edge
+    {% endif -%}
+    no shutdown
+
+vrtp version {{  }}
+vtp mode {{ x }}
