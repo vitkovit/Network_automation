@@ -1,0 +1,9 @@
+! interface type config
+interface {{ device }}
+    description to {{ next_device }} int {{ remote_intr }} {{ channel_number }}
+    {% if device == "ACCS_04" %}
+    switchport mode trunk
+    {% else %}
+    ! do nothing
+    {% endif %}
+    no shutdown

@@ -1,0 +1,16 @@
+! LACP config
+interface {{ local-int }}
+    description to {{next-device}} to {{remote-int}} {{channel-number}}
+    {% if vlan == trunk or vlan == access %}
+    switchport mode trunk
+    {% elif %}
+    switchport mode access
+    switchport access vlan {{ vlan }}
+    spanning-tree port type edge
+    {% else %}
+    no switchport
+    channel-group {{channel-number}} mode {{po-mode}}
+    {% endif -}
+    no shutdown
+    
+
