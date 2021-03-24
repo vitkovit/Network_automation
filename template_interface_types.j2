@@ -1,14 +1,21 @@
 ! interface type config on device {{ device_name }}
+{% if po_mode == "not_supported" or po_mode == "on" -%}
+interface port-channel {{ channel_number }}
+    description Po from {{ next_device }}
+{% endif -%}
 interface {{ local_intr }}
     description to {{ next_device }} int {{ remote_intr }} mode {{ channel_number }}
     {% if channel_number == "trunk" -%}
+    switchport trunk encapsulation dot1q
     switchport mode trunk
     {% elif channel_number == "access" -%}
     switchport mode access
     switchport access vlan {{ vlan }}
-    spanning-tree port type edge
-    {% elif channel_number|int > 1 -%}
-    no switchport
+    spanning-tree portfast
+    {% elif po_mode == "not_supported" -%}
+    channel-group {{ channel_number }}
+    {% elif channel_number|int > 0 -%}
+    switchport
     channel-group {{ channel_number }} mode {{ po_mode }}
     {% else -%}
     ! do nothing

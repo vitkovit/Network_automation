@@ -5,7 +5,7 @@ no service config
 no boot network
 
 ! change #########
-hostname core-01-01
+hostname dist-01-02
 ! change #########
 no ip domain-lookup
 username cisco priv 15 pass cisco
@@ -24,11 +24,11 @@ vrf definition OOB-MGMT
 address-family ipv4
 exit
 exit
-int ethernet 3/3
+int ethernet 2/7
 vrf forwarding OOB-MGMT
 
 ! change #########
-ip address 10.0.0.101 255.255.255.0
+ip address 10.0.0.104 255.255.255.0
 ! change #########
 
 no shut
@@ -75,6 +75,40 @@ ip address 10.0.0.106 255.255.255.0
 no shut
 exit
 ip route vrf OOB-MGMT 0.0.0.0 0.0.0.0 10.0.0.1
+end
+wr
+
+
+! ###################### router 3725 ######################
+enable
+config t
+no service config
+no boot network
+
+! change #########
+hostname dist-01-02
+! change #########
+no ip domain-lookup
+username cisco priv 15 pass cisco
+ip domain-name eve-ng.com
+ip ssh ver 2
+crypto key generate rsa mod 1024
+
+line vty 0
+transport input ssh
+login local
+exit
+
+! add Slot 2 NM-1FE-TX 
+int fa2/0
+
+! change #########
+ip address 10.0.0.104 255.255.255.0
+! change #########
+
+no shut
+exit
+ip route 0.0.0.0 0.0.0.0 10.0.0.1
 end
 wr
 
