@@ -9,7 +9,10 @@ import getpass
 import concurrent.futures
 from itertools import chain
 from collections import defaultdict
-
+import pprint
+from concurrent.futures import ThreadPoolExecutor
+from itertools import repeat
+from itertools import starmap
 
 csv_source = "config_data.csv"
 jinja2_source = "template_interface_types.j2"
@@ -24,7 +27,7 @@ def credentials():                                                    # will def
     return credentials_used
 
 with open (yaml_source) as yaml_file:                                 # use with open because file is automaticaly closed
-    open_yaml_file = yaml.safe_load(yaml_file) 
+    open_yaml_file = yaml.safe_load(yaml_file)
 
 with open(jinja2_source) as jinja2file:
     interface_type_template = Template(jinja2file.read(), keep_trailing_newline=True)
@@ -38,39 +41,15 @@ fill_reader["vlan"] = np.nan_to_num(fill_reader["vlan"]).astype(int)
 fill_reader["device"] = fill_reader["device"].fillna(method='ffill')
 # every empty field will habe NaN in it, so replace this with "" (empty) value
 fill_reader = fill_reader.replace(np.nan, "")
+# this will clear Unnamed field from csv, if this does not exist nothing would change in end code
+fill_reader = fill_reader.loc[:, ~fill_reader.columns.str.contains('^Unnamed')]
 # convert fill_reader to dictionary ‘records’ will list in form [{column -> value}, ...]
 converted_data_csv = fill_reader.to_dict(orient='records')
 
-
-def connections(yaml_data,stored_credentials,configuration_for_device):
-    for device in yaml_data['all']['sites']['hosts']:
-        device_in_site = {}                                     # populate list for connecting
-        device_in_site.update({'device_type':(yaml_data['all']['sites']['device_type_cisco'])})
-        ip_address = ipaddress.IPv4Interface(yaml_data['all']['sites']['hosts'][device]['ip'])
-        device_in_site.update({'host':str(ip_address.ip)})       # convert to str because it is <class 
-        device_in_site.update(stored_credentials)
-        #yield device_in_site
-        #command_list(device)
-        #command_list(converted_data_csv,interface_type_template,device)
-        #connect_config(**device_in_site)
-        #connect_config(device_in_site)
-        #return device_in_site
-        if device in configuration_for_device:
-            #print(configuration_for_device[device])
-            print(f"Connecting to: {device}")
-            #print(f"sending config: {configuration_for_device[device]}")
-            con_device = ConnectHandler(**device_in_site)
-            output = con_device.send_config_set(configuration_for_device[device])
-            print(output)
-            input("Press Enter to continue...")
-            con_device.disconnect
-#print(type(x))
-
 def command_list(csv_data,jinja2_int_template):
-    interface_config_set = {}
-    configuration_dictionary = defaultdict(list)
+    interface_configs = {}
     for row in csv_data:
-    #for every row in csv file render it with jinja2 template
+    #for every row in csv file render it with jinja2 template    
         interface_config = jinja2_int_template.render(
             local_intr = row["local-intr"],
             next_device = row["next-device"],
@@ -81,25 +60,64 @@ def command_list(csv_data,jinja2_int_template):
             #just for funn add comment to know on witch device configuration is happening
             device_name = row["device"]
         )
-        return_values = []
-        return_values += interface_config.split("\n")
-        interface_config_set[row["device"]] = return_values
-        for device_names in interface_config_set.keys():
-            if device_names == row["device"]:
-                configuration_dictionary[device_names].append(return_values)
-    #print(configuration_dictionary)
-    return configuration_dictionary
+        if row["device"] in interface_configs:
+            return_values += interface_config.split("\n")
+        else:
+            return_values = []
+            interface_configs[row["device"]] = return_values
+    return interface_configs
+    #connections(credentials(),open_yaml_file,interface_configs)
+    #pprint.pp(interface_configs)
+#pprint.pp(x)
 
+def connections(yaml_data,stored_credentials,**cmd_per_device):
+    for device in yaml_data['all']['sites']['hosts']:
+        device_in_site = {}                                     # populate list for connecting
+        device_in_site.update({'device_type':(yaml_data['all']['sites']['device_type_cisco'])})
+        ip_address = ipaddress.IPv4Interface(yaml_data['all']['sites']['hosts'][device]['ip'])
+        device_in_site.update({'host':str(ip_address.ip)})       # convert to str because it is <class 
+        device_in_site.update(stored_credentials)
 
-connections(open_yaml_file,credentials(),command_list(converted_data_csv,interface_type_template))
+        print(f"Connecting to: {device}")                        # check in witch device will script connect
+        #if device in cmd_per_device[device]:
+        #pprint.pp(cmd_per_device[device])
+            #pprint.pp(cmd_per_device["device"])
+        con_device = ConnectHandler(**device_in_site)            # connect to each device
+        # for each device, the whole list "return_values" is send to configure
+        output = con_device.send_config_set(cmd_per_device)#[device])
+        print(output)
+        #print(device_in_site)
+#x=command_list(converted_data_csv,interface_type_template)
+#y=connections(credentials(),open_yaml_file)
+#print(x)
+#y=connections(credentials(),open_yaml_file,x)
+#pprint.pp(y)
+
+#1 - connections, open_yaml_file, repeat(credentials), configuration_for_device
+
+#connections(open_yaml_file,credentials(),command_list(converted_data_csv,interface_type_template))
 #command_list(converted_data_csv,interface_type_template,command_list(converted_data_csv,interface_type_template))
 """
-with concurrent.futures.ThreadPoolExecutor() as exe:
+with ThreadPoolExecutor(max_workers=8) as exe:
+    #stored_cred = credentials()
     configuration_for_device = command_list(converted_data_csv,interface_type_template)
-    results = exe.map(connections, open_yaml_file, credentials(), configuration_for_device)
+    results = exe.map(connections, credentials(),open_yaml_file, configuration_for_device)
+"""
+x=command_list(converted_data_csv,interface_type_template)
+#for y in x.values():
+ #   print(y)
+
+with concurrent.futures.ThreadPoolExecutor() as exe:
+#with ThreadPoolExecutor(max_workers=8) as exe:
+    #x = command_list(converted_data_csv,interface_type_template)
+    #configuration_for_device = command_list(converted_data_csv,interface_type_template)
+    exe.map(connections(open_yaml_file,credentials()), x.values())
+   # results = exe.(connections(open_yaml_file,credentials(),**y) for y in x.values())
+
+
 """
 #def connections(yaml_data,stored_credentials,configuration_for_device):
-
+"""
 """
 def connect_config(device_to_connect,configuration_for_device):
         con_device = ConnectHandler(**device_to_connect)
